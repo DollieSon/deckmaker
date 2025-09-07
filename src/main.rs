@@ -1,4 +1,6 @@
-use crate::deck::deckitem::WordDeck;
+use std::string;
+
+use crate::deck::{deckitem::WordDeck, textreader::{detect_deck_text, read_file}};
 
 mod deck;
 fn main() {
@@ -18,6 +20,20 @@ fn main() {
     let finality = WordDeck::from_word_deck(&wordvec);
     finality.print_self();
 
-    println!("Hello, world!");
+
+    // let word_list = read_file();
+    // let dicky = WordDeck::from_words(&word_list);
+    // dicky.print_stat();
+    // println!("Hello, world!");
+
+    let files = detect_deck_text();
+    println!("files {:?}",files);
+
+    for file in files {
+        let string_list = read_file(&file);
+        let decked = WordDeck::from_words(&string_list);
+        println!("{}",file);
+        decked.print_stat();
+    }
 
 }

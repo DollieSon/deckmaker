@@ -51,10 +51,14 @@ impl WordDeck{
     }
 
     pub fn print_self(&self){
-        println!("Letter Count: {} , {:?}", self.lettter_count.len(), self.lettter_count);
-        println!("Word count: {} ", self.deck.len());
+        Self::print_stat(&self);
         for word in self.deck.iter(){
             println!("{}",word);
         }
+    }
+
+    pub fn print_stat(&self){
+        println!("Word count: {} ", self.deck.len());
+        println!("Letter Count: {} , {:?}", self.lettter_count.len(), self.lettter_count);
     }
 }
