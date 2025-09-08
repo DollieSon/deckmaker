@@ -1,7 +1,7 @@
 const DIR_NAME:&str = "deck_text";
 
 
-use std::{fs::{self, File}, io::{BufRead, BufReader}};
+use std::{fs::{self, File}, io::{BufRead, BufReader, BufWriter, Write}};
 
 fn is_correct(word: &String)-> bool{
     let ch_checker = word.chars().all(|ch| ch.is_ascii_alphabetic());
@@ -47,4 +47,14 @@ pub fn detect_deck_text()-> Vec<String>{
         }
     }
     return found_files;
+}
+
+pub fn save_deck_to_file(deck: &Vec<String>, deck_name: &String){
+    let path = format!("{}/{}.txt",DIR_NAME,deck_name);
+    let file = File::create(&path).unwrap();
+    let mut writer = BufWriter::new(file);
+    for word in deck{
+        writer.write_all(format!("{}\n",word).as_bytes()).unwrap();
+    }
+    println!("saved deck to {}",path);
 }

@@ -61,4 +61,10 @@ impl WordDeck{
         println!("Word count: {} ", self.deck.len());
         println!("Letter Count: {} , {:?}", self.lettter_count.len(), self.lettter_count);
     }
+
+    pub fn get_deck(&self) -> Vec<String> {
+        let mut res:Vec<String> = self.deck.clone().into_iter().collect();
+        res.sort();
+        return res;
+    }
 }

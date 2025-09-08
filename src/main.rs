@@ -1,6 +1,6 @@
 use std::string;
 
-use crate::deck::{deckitem::WordDeck, textreader::{detect_deck_text, read_file}};
+use crate::deck::{deckitem::WordDeck, filemanager::{detect_deck_text, read_file, save_deck_to_file}};
 
 mod deck;
 fn main() {
@@ -35,5 +35,6 @@ fn main() {
         println!("{}",file);
         decked.print_stat();
     }
-
+    let orig_deck = finality.get_deck();
+    save_deck_to_file(&orig_deck, &"Original".to_string());
 }
