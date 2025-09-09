@@ -11,7 +11,7 @@ fn is_correct(word: &String)-> bool{
 //name of file (must be in deck_text)
 pub fn read_file(file_name:&String) -> Vec<String>{
     let mut res = Vec::<String>::new();
-    let file_name = format!("{}/{}",DIR_NAME,file_name);
+    let file_name = format!("{}/{}.txt",DIR_NAME,file_name);
     let file = File::open(file_name).unwrap();
     let reader = BufReader::new(file);
     for (line_num, line) in reader.lines().enumerate(){
@@ -25,7 +25,7 @@ pub fn read_file(file_name:&String) -> Vec<String>{
     }
     return res;
 }
-
+// detects deck txt files
 pub fn detect_deck_text()-> Vec<String>{
     let mut found_files = Vec::new();
     let file_dir = fs::read_dir(DIR_NAME).unwrap();
@@ -37,11 +37,8 @@ pub fn detect_deck_text()-> Vec<String>{
         if path.is_file(){
             if let Some(ext) = path.extension(){
                 if ext == "txt"{
-                    if let Some(name)= path.file_name(){
-                        if let Some(name_str) = name.to_str() {
-                            found_files.push(name_str.to_string());
-                        }
-                    }
+                    let name = path.file_stem().unwrap().to_str().unwrap().to_string();
+                    found_files.push(name);
                 }
             }
         }

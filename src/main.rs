@@ -3,6 +3,7 @@ use std::string;
 use crate::deck::{deckitem::WordDeck, filemanager::{detect_deck_text, read_file, save_deck_to_file}};
 
 mod deck;
+mod terminal;
 fn main() {
     let sample = WordDeck::new();
     sample.print_self();
