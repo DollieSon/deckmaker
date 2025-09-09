@@ -25,16 +25,7 @@ impl WordDeck{
     pub fn from_words(string_deck: &Vec<String>) -> Self{
         let mut res = Self::new();
         for word in string_deck{
-            res.deck.insert(word.clone());
-            //count chars
-            let characters = word.chars()
-            .map(|ch|{(ch.to_ascii_uppercase() as u8) - ASCII_BASE } as usize)
-            .fold(vec![0;ALPHABET_COUNT], |mut vec,x|{
-                vec[x]+=1;
-                vec
-            });
-            //Combine them        
-            Self::combine_letter_count(&mut res.lettter_count, &characters);
+            res.add_word(word.clone());
         }
         return res;
     }
@@ -66,5 +57,35 @@ impl WordDeck{
         let mut res:Vec<String> = self.deck.clone().into_iter().collect();
         res.sort();
         return res;
+    }
+
+    pub fn add_word(&mut self, word:String){
+        self.deck.insert(word.clone());
+        let characters = Self::get_char_count(&word);
+        //Combine them        
+        Self::combine_letter_count(&mut self.lettter_count, &characters);
+    }
+    pub fn remove_word(&mut self, word:&String) -> bool {
+        let res = self.deck.take(&word.to_string());
+        match res {
+            None => {
+                return false;
+            }
+            Some(w) => {
+                let characters = Self::get_char_count(&w);
+                //Combine them        
+                Self::combine_letter_count(&mut self.lettter_count, &characters);
+
+                return true;
+            }
+        }
+    }
+    pub fn get_char_count(word:&String) -> Vec<u32>{
+        word.chars()
+        .map(|ch|{(ch.to_ascii_uppercase() as u8) - ASCII_BASE } as usize)
+        .fold(vec![0;ALPHABET_COUNT], |mut vec,x|{
+            vec[x]-=1;
+            vec
+        })
     }
 }
