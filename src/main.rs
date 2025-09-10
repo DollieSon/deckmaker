@@ -8,11 +8,11 @@ fn main() {
     let sample = WordDeck::new();
     sample.print_self();
     let words:Vec<String> = [String::from("HELLO"),String::from("WORLD"),String::from("POGGIES")].to_vec();
-    let grok = WordDeck::from_words(&words);
+    let grok = WordDeck::from_words(&words,"Poggies".to_string());
     grok.print_self();
     
     let wordle:Vec<String> = [String::from("I"),String::from("HATE"),String::from("GRANNIES")].to_vec();
-    let gorckle = WordDeck::from_words(&wordle);
+    let gorckle = WordDeck::from_words(&wordle,"wordle".to_string());
     gorckle.print_self();
 
     let mut wordvec = Vec::<WordDeck>::new();
@@ -32,8 +32,8 @@ fn main() {
 
     for file in files {
         let string_list = read_file(&file);
-        let decked = WordDeck::from_words(&string_list);
         println!("{}",file);
+        let decked = WordDeck::from_words(&string_list,file);
         decked.print_stat();
     }
     let orig_deck = finality.get_deck();
