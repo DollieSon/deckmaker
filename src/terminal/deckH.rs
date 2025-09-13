@@ -1,4 +1,4 @@
-use std::{io, sync::Arc};
+use std::{io::{self, Write}, sync::Arc};
 
 use crate::deck::deckitem::WordDeck;
 
@@ -15,9 +15,10 @@ impl Ideck {
     // rename (returns the new name)
     pub fn rename(&mut self)-> String{
         let mut input = String::new();
-        input = io::stdin().read_line(&mut input)
+        io::stdin().read_line(&mut input)
                 .expect("Error Parsing Message")
                 .to_string();
+        input = input.trim().to_string();
         self.deck.name = input.clone();
         return input;
     }
@@ -28,17 +29,23 @@ impl Ideck {
     pub fn print_words(&self){
         self.deck.print_word();
     }
+    fn get_word() -> String{
+        let mut input = String::new();
+            io::stdin().read_line(&mut input)
+            .expect("Error Parsing");
+        let word = input.trim();
+        return word.to_string();
+    }
     // add word
     pub fn add_word(&mut self){
         loop{
             print!("Enter word to add (Empty to stop):");
-            let mut input = String::new();
-            io::stdin().read_line(&mut input)
-            .expect("Error Parsing");
-            let word = input.trim();
+            io::stdout().flush();
+            let mut word = Self::get_word();
             if word == "" {
                 break;
             }
+            word = word.to_ascii_uppercase();
             println!("Word : {}", word);
             self.deck.add_word(word.to_string());
         }
@@ -47,7 +54,13 @@ impl Ideck {
     pub fn remove_word(&mut self){
         self.deck.print_word();
         loop{
-            print!("Enter Word")
+            print!("Enter Word(empty to stop) :");
+            let word = Self::get_word();
+            if word == "" {
+                break;
+            }
+            println!("Removing : {}", word);
+            self.deck.remove_word(&word.to_string());
         }
     }
     // save as dictionary text

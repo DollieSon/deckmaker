@@ -42,7 +42,7 @@ impl WordDeck{
 
     // for combining decks 
     // should we have duplicate checking? 
-    pub fn from_word_deck(word_deck: &Vec<WordDeck>) -> Self{
+    pub fn from_word_deck(word_deck: &Vec<&WordDeck>) -> Self{
         let mut res = Self::new();
         for deck in word_deck{
             res.deck.extend(deck.deck.iter().cloned());
@@ -67,7 +67,7 @@ impl WordDeck{
         println!("Letter Count: {} , {:?}", self.lettter_count.len(), self.lettter_count);
     }
 
-    pub fn get_deck(&self) -> Vec<String> {
+    pub fn get_words(&self) -> Vec<String> {
         let mut res:Vec<String> = self.deck.clone().into_iter().collect();
         res.sort();
         return res;
