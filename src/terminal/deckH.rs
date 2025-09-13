@@ -30,10 +30,25 @@ impl Ideck {
     }
     // add word
     pub fn add_word(&mut self){
-        let mut input = String::new();
-        
+        loop{
+            print!("Enter word to add (Empty to stop):");
+            let mut input = String::new();
+            io::stdin().read_line(&mut input)
+            .expect("Error Parsing");
+            let word = input.trim();
+            if word == "" {
+                break;
+            }
+            println!("Word : {}", word);
+            self.deck.add_word(word.to_string());
+        }
     }
     // remove word
-
+    pub fn remove_word(&mut self){
+        self.deck.print_word();
+        loop{
+            print!("Enter Word")
+        }
+    }
     // save as dictionary text
 }
