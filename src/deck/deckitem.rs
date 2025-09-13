@@ -54,6 +54,9 @@ impl WordDeck{
 
     pub fn print_self(&self){
         Self::print_stat(&self);
+        Self::print_word(&self);
+    }
+    pub fn print_word(&self){
         for word in self.deck.iter(){
             println!("{}",word);
         }
