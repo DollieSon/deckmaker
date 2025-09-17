@@ -1,4 +1,4 @@
-use std::{collections::HashMap, io::{self, Write}};
+use std::{collections::{HashMap, HashSet}, io::{self, Read, Write}};
 
 use crate::{deck::{deckitem::WordDeck, filemanager::{detect_deck_text, read_file, save_deck_to_file}}, terminal::deckH::Ideck};
 
@@ -13,6 +13,14 @@ impl terminal_deck{
          }
     }
     // you can only start once
+    fn get_input() -> String{
+        let mut input = String::new();
+        io::stdin().read_line(&mut input)
+        .expect("Error Parsing Input..");
+        let res = input.trim();
+        return res.to_string();
+    }
+
     pub fn start(mut self){
         // print main menu       
         println!("---------Deck Maker---------");
@@ -152,7 +160,8 @@ impl terminal_deck{
                 "4"=> {
                     let old_name = deck.deck.name.clone();
                     let new_name = deck.rename();
-                    println!("{} has been renamed to {} ", old_name,new_name);
+                    name = new_name;
+                    println!("{} has been renamed to {} ", old_name,name);
                 }
                 "5"=> {
                     let pairs:Vec<&String> = decknames.iter().filter(|&s| s != &name).collect();
@@ -194,5 +203,85 @@ impl terminal_deck{
                 }
             }
         }
+    }
+
+    fn create_deck(&mut self){
+        let mut deck_name = String::new();
+        // ask deck name
+        loop{
+            println!("Enter Deck Name:");
+            let input = Self::get_input();
+            match input.as_str(){
+                "" => {
+                    println!("Deck Name cannot be empty");
+                }
+                _ => {
+                    deck_name = input;
+                    break;
+                }
+            }
+
+        }
+        // ask to combine?
+        let mut deck_type = String::new();
+        let mut deck = WordDeck::new();
+        loop{
+            println!("Start with certain Decks or Empty?");
+            println!("(E) Empty");
+            println!("(C) Custom");
+            let input = Self::get_input();
+            match input.to_uppercase().as_str(){
+                "E"=> {
+                    //cheating
+                    break;
+                }
+                "C" => {
+                    deck = self.create_custom_deck();
+                }
+                _ => {
+                    println!("Incorrect Input");
+                }
+            }
+        }
+        deck.rename(deck_name);
+        // add words
+        // confirm
+    }
+    fn create_custom_deck(&self) -> WordDeck{
+        let mut decknames= self.deck_list.keys().map(|s|{s.clone()}).collect::<HashSet<String>>();
+        let mut selected_decks = HashSet::<String>::new();
+        loop {
+            println!("Available Decks: {:?}",decknames);
+            if decknames.len() == 0 && selected_decks.len() == 0 {
+                println!("Empty Decks Cannot Select, Returning Empty Deckl");
+                return WordDeck::new();
+            }
+            let mut input = String::new();
+            println!("Enter Deck to select (Epmpty to stop): ");
+            io::stdin().read_line(&mut input)
+            .expect("Error Parsing Message")
+            .to_string();
+            input = input.trim().to_string();
+            if decknames.contains(&input){
+                decknames.remove(&input);
+                selected_decks.insert(input);
+            }
+            else if decknames.len() == 0 {
+                println!("No more decks.. stoping..");
+                break;
+            }
+            else if input.is_empty(){
+                println!("Stopping..");
+                break;
+            }else {
+                println!("{} does not exist as a Deck Name",input);
+            }
+        }
+        let mut decks = Vec::<&WordDeck>::new();
+        for names in selected_decks{
+            let deck = self.deck_list.get(&names).unwrap();
+            decks.push(&deck.deck);
+        }
+        return WordDeck::from_word_deck(&decks);
     }
 }

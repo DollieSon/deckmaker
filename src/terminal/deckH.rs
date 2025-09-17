@@ -63,5 +63,9 @@ impl Ideck {
             self.deck.remove_word(&word.to_string());
         }
     }
+
+    pub fn get_word_vec(&self) -> Vec<String>{
+        return self.deck.get_words();
+    }
     // save as dictionary text
 }
