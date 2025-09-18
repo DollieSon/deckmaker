@@ -1,14 +1,14 @@
-use std::{collections::{HashMap, HashSet}, io::{self, Read, Write}};
+use std::{collections::{HashMap, HashSet}, io::{self, Write}};
 
 use crate::{deck::{deckitem::WordDeck, filemanager::{detect_deck_text, read_file, save_deck_to_file}}, terminal::deckH::Ideck};
 
-pub struct terminal_deck{
+pub struct TerminalDeck{
     deck_list: HashMap<String,Ideck>
 }
 
-impl terminal_deck{
+impl TerminalDeck{
     pub fn new() -> Self{
-        return terminal_deck { 
+        return TerminalDeck { 
             deck_list: HashMap::new()
          }
     }
@@ -41,6 +41,7 @@ impl terminal_deck{
                     self.select_deck();
                 }
                 "2" => {
+                    self.create_deck();
                 }
                 "3" => {
                     self.delete_deck();
@@ -125,7 +126,6 @@ impl terminal_deck{
                 name = input;
                 break;
             }
-            
             println!("{} does not exist",input);
         }
         let mut deck = self.deck_list.get_mut(&name).unwrap();
@@ -154,8 +154,8 @@ impl terminal_deck{
                     deck.remove_word();
                 }
                 "3"=> {
-                    deck.print_details();
                     deck.print_words();
+                    deck.print_details();
                 }
                 "4"=> {
                     let old_name = deck.deck.name.clone();
@@ -237,6 +237,7 @@ impl terminal_deck{
                 }
                 "C" => {
                     deck = self.create_custom_deck();
+                    break;
                 }
                 _ => {
                     println!("Incorrect Input");
@@ -245,6 +246,17 @@ impl terminal_deck{
         }
         deck.rename(deck_name);
         // add words
+        loop{
+            print!("Enter Word (Empty to Stop):");
+            io::stdout().flush();
+            let input = Self::get_input();
+            if input.is_empty(){
+                break;
+            }
+            deck.add_word(input.to_uppercase());
+        }
+        let res = Ideck::new(deck);
+        self.deck_list.insert(res.deck.name.clone(), res);
         // confirm
     }
     fn create_custom_deck(&self) -> WordDeck{
@@ -283,5 +295,8 @@ impl terminal_deck{
             decks.push(&deck.deck);
         }
         return WordDeck::from_word_deck(&decks);
+    }
+    fn print_decks(&self){
+        
     }
 }
